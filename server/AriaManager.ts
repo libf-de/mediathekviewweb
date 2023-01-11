@@ -15,9 +15,6 @@ export default class AriaManager {
                 secret: config.aria.secret,
                 secure: config.aria.secure
             });
-            this.aria.on("output", m => {
-                console.info("aria2 OUT: ", m);
-              });
             this.dlGuids = new Array<string>();
 
             this.aria.call("getVersion")
