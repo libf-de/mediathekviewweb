@@ -17,6 +17,14 @@ interface Config {
     token_auth: string,
     siteId: number
   },
+  aria: {
+    enabled: boolean,
+    host: string,
+    port: number,
+    secret: string,
+    path: string,
+    secure: boolean
+  },
   contact: {
     name: string,
     street: string,
@@ -101,7 +109,14 @@ const config: Config = {
     token_auth: getEnvOrDefault('MATOMO_AUTH_TOKEN', 'abc123'),
     siteId: getIntegerEnvOrDefault('MATOMO_SITE_ID', 1)
   },
-
+  aria: {
+    enabled: getBooleanEnvOrDefault('ARIA_ENABLED', false),
+    host: getEnvOrDefault('ARIA_HOST', 'localhost'),
+    port: getIntegerEnvOrDefault('ARIA_PORT', 6800),
+    secret: getEnvOrDefault('ARIA_SECRET', ''),
+    path: getEnvOrDefault('ARIA_PATH', '/jsonrpc'),
+    secure: getBooleanEnvOrDefault('ARIA_SECURE', false)
+  },
   contact: {
     name: getEnvOrDefault('CONTACT_NAME', 'Max Mustermann'),
     street: getEnvOrDefault('CONTACT_STREET', 'Musterstraße 111'),

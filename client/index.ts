@@ -20,6 +20,9 @@ const pv_id = randomString(6);
 const itemsPerPage = 15;
 let currentPage = 0;
 let mediathekTable;
+let downloadTable;
+let downloadInt;
+let downloadTim = 500;
 let connectingModal;
 let contactModal;
 let cookieModal;
@@ -593,7 +596,7 @@ function createSubtitleRow(text, url, filename, filesize?) {
   return tableRow;
 }
 
-function createVideoRow(text, url, videoTitle, filename, filesize?) {
+function createVideoRow(button, text, url, videoTitle, filename, filesize?) {
   const tableRow = $('<tr>');
 
   const watchButton = $('<a>', {
@@ -618,7 +621,8 @@ function createVideoRow(text, url, videoTitle, filename, filesize?) {
   const downloadIcon = $('<i>').addClass('material-icons floatRight').text('save');
 
   const saneFname = filename.replace(/[^0-9a-zA-ZäöüÄÖÜß_\-.: ]/gi, '').replaceAll(" ", "_");
-  downloadButton.click(() => { downloadIcon.addClass('pulse'); track('download-video'); httpGetAsync('download?url=' + encodeURI(url) + "&fn=" + encodeURI(saneFname), (msg) => {downloadIcon.removeClass('pulse'); console.log(msg);  }); return false; });
+  downloadButton.click(() => {
+      downloadIcon.addClass('pulse'); track('download-video'); if(confirm("Diese Sendung herunterladen?\n»" + filename + "«")) { animateDownloadIcon(button); httpGetAsync('dl-add?url=' + encodeURI(url) + "&fn=" + encodeURI(saneFname), (msg) => {downloadIcon.removeClass('pulse'); }); } return false; });
   downloadButton.append(downloadIcon);
 
   const clipboardButton = $('<a>', {
@@ -763,19 +767,19 @@ function createVideoActionButton(entry) {
   let lowRow, midRow, highRow, subtitleRow;
 
   if (entry.url_video_hd) {
-    highRow = createVideoRow('Hoch', entry.url_video_hd, entry.title, filenamebase + '.' + entry.url_video_hd.split('.').pop());
+    highRow = createVideoRow(button, 'Hoch', entry.url_video_hd, entry.title, filenamebase + '.' + entry.url_video_hd.split('.').pop());
     tableBody.append(highRow);
   }
   if (entry.url_video) {
-    midRow = createVideoRow('Mittel', entry.url_video, entry.title, filenamebase + '.' + entry.url_video.split('.').pop(), entry.size);
+    midRow = createVideoRow(button, 'Mittel', entry.url_video, entry.title, filenamebase + '.' + entry.url_video.split('.').pop(), entry.size);
     tableBody.append(midRow);
   }
   if (entry.url_video_low) {
-    lowRow = createVideoRow('Niedrig', entry.url_video_low, entry.title, filenamebase + '.' + entry.url_video_low.split('.').pop());
+    lowRow = createVideoRow(button, 'Niedrig', entry.url_video_low, entry.title, filenamebase + '.' + entry.url_video_low.split('.').pop());
     tableBody.append(lowRow);
   }
   if (entry.url_subtitle) {
-    subtitleRow = createSubtitleRow('UT', entry.url_subtitle, filenamebase + '.' + entry.url_subtitle.split('.').pop());
+    subtitleRow = createSubtitleRow(button, 'UT', entry.url_subtitle, filenamebase + '.' + entry.url_subtitle.split('.').pop());
     tableBody.append(subtitleRow);
   }
 
@@ -977,6 +981,97 @@ function copyToClipboard(text) {
   dummy.select();
   document.execCommand('copy');
   document.body.removeChild(dummy);
+}
+
+function initDownloadList() {
+  downloadTable = $('#downloadsTbl').DataTable({
+    columns: [{ /*Dateiname*/
+      width: '55%',
+      data: 'files'
+    }, { /*Status*/
+      width: '8%',
+      data: 'status'
+    }, { /*Fortschritt*/
+      width: '25%',
+      data: null,
+      render: returnEmptyString,
+      createdCell: (td, cellData, rowData, row, col) => {
+        $(td).append("<div class=\"wrapper\"><div class=\"progress-bar\"><span class=\"progress-bar-fill\" style=\"width: " + rowData.progress + ";\">" + rowData.completedLength + "/" + rowData.totalLength + "(" + rowData.progress + ")</span></div></div>");
+      }
+    }, { /*Speed*/
+      width: '7%',
+      data: 'downloadSpeed'
+    }, { /*Controls*/
+      width: '5%',
+      data: null,
+      render: returnEmptyString,
+      createdCell: (td, cellData, rowData, row, col) => {
+        $(td).append(createCancelDownloadButton(rowData));
+      }
+    }],
+    language: {
+      emptyTable: 'Keine Downloads vorhanden'
+    },
+    searching: false,
+    ordering: false,
+    info: false,
+    paging: false,
+    scrollX: true
+  });
+  updateDownloads();
+  downloadInt = window.setInterval(updateDownloads, 1000);
+}
+
+function cancelInterval() {
+  clearInterval(downloadInt);
+}
+
+function updateDownloads() {
+  httpGetAsync("dl-status", (data) => {
+    let dlData = JSON.parse(data);
+    downloadTable.clear();
+    downloadTable.draw();
+    dlData.active.forEach(entry => downloadTable.row.add(entry));
+    dlData.waiting.forEach(entry => downloadTable.row.add(entry));
+    dlData.stopped.forEach(entry => downloadTable.row.add(entry));
+    downloadTable.draw();
+  });
+}
+
+function animateDownloadIcon(clickedElem) {
+  const icn = $('<i>').attr("id", "iconAnim").addClass('material-icons').text('file_download');
+  $("body").append(icn);
+  icn.css("position", "fixed");
+  icn.css("display", "float");
+  icn.css("color", "#c4001d");
+  icn.css("top", $(clickedElem).offset().top);
+  icn.css("left", $(clickedElem).offset().left);
+
+  $(".popover").fadeOut(200);
+
+  icn.animate({ 
+    top: "-=150px",
+    left: "-=150px",
+    "font-size": "300px"
+  }, 1000, "swing", () => {
+    icn.fadeOut(500);
+  });
+}
+
+function createCancelDownloadButton(entry) {
+  const button = $('<a>', {
+    target: '_blank',
+    href: '#',
+    click: () => {
+      httpGetAsync("dl-cancel?gid=" + entry.gid, ret => console.log(ret));
+      return false;
+    }
+  });
+
+  const icon = $('<i>').addClass('material-icons delete-icon').text('delete').attr("title", "Download abbrechen/löschen");
+  button.append(icon);
+
+  return button;
 }
 
 $(() => {

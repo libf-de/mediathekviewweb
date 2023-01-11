@@ -41,3 +41,6 @@ static/index-compiled.min.js
 static/index-compiled.min.js.map
 
 dist
+
+aria2-config
+aria2-downloads

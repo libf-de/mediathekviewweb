@@ -9,6 +9,7 @@ import path from 'path';
 import request from 'request';
 import * as SocketIO from 'socket.io';
 import URL from 'url';
+import AriaManager from './AriaManager';
 import config from './config';
 import MediathekManager from './MediathekManager';
 import renderImpressum from './pages/impressum';
@@ -16,8 +17,6 @@ import { getRedisClient, initializeRedis } from './Redis';
 import RSSFeedGenerator from './RSSFeedGenerator';
 import SearchEngine from './SearchEngine';
 import * as utils from './utils';
-
-import Aria2 from "aria2";
 
 const impressum = renderImpressum(config.contact);
 
@@ -54,12 +53,7 @@ const impressum = renderImpressum(config.contact);
   const mediathekManager = new MediathekManager();
   const rssFeedGenerator = new RSSFeedGenerator(searchEngine);
 
-  const aria2 = new Aria2({
-	host: 'aria2-pro',
-	port: 6800,
-	path: '/jsonrpc', 
-	secret: 'MeisterLampeKlappboxTisch'
-  });
+  const ariaManager = new AriaManager();
 
   const indexing = false;
   let lastIndexingState;
@@ -103,20 +97,27 @@ const impressum = renderImpressum(config.contact);
     next();
   });
 
-  app.get('/download', function (req, res) {
-    //const uri = req.get('url');
-    const uri = decodeURI(req.query.url.toString());
-
-    const msg = {};
-    
-    if(req.query.fn != null) {
-	const fno = { out: decodeURI(req.query.fn.toString()) }
-	Object.assign(msg, fno);
-    }
-   
-    const guid = aria2.call("addUri",[uri], msg);
-    res.send(guid);
+  app.get('/downloads', function (req, res) {
+    res.sendFile(path.join(__dirname, '/client/downloads.html'));
   });
+
+  app.get('/dl-add', function (req, res) {
+    if(ariaManager.addDownload(req.query.url, req.query.fn)) {
+      res.send("OK");
+    } else {
+      res.send("FAIL");
+    }
+  });
+
+  app.get("/dl-cancel", function (req, res) {
+    console.info("/dl-cancel called!");
+    ariaManager.removeDownload(req.query.gid.toString()).then(arr => { res.send(arr); console.info(arr); });
+  })
+
+  app.get("/dl-status", function (req, res) {
+    ariaManager.getDownloads().then(arr => { res.send(arr); });
+    //res.send(ariaManager.getActiveDownloads() + " || " + ariaManager.getWaitingDownloads() + " || " + ariaManager.getStoppedDownloads());
+  })
 
   app.use('/static', express.static(path.join(__dirname, '/client/static')));
   app.use('/api', bodyParser.text());
