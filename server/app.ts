@@ -17,6 +17,8 @@ import RSSFeedGenerator from './RSSFeedGenerator';
 import SearchEngine from './SearchEngine';
 import * as utils from './utils';
 
+import Aria2 from "aria2";
+
 const impressum = renderImpressum(config.contact);
 
 (async () => {
@@ -51,6 +53,13 @@ const impressum = renderImpressum(config.contact);
 
   const mediathekManager = new MediathekManager();
   const rssFeedGenerator = new RSSFeedGenerator(searchEngine);
+
+  const aria2 = new Aria2({
+	host: 'aria2-pro',
+	port: 6800,
+	path: '/jsonrpc', 
+	secret: 'MeisterLampeKlappboxTisch'
+  });
 
   const indexing = false;
   let lastIndexingState;
@@ -92,6 +101,21 @@ const impressum = renderImpressum(config.contact);
     });
 
     next();
+  });
+
+  app.get('/download', function (req, res) {
+    //const uri = req.get('url');
+    const uri = decodeURI(req.query.url.toString());
+
+    const msg = {};
+    
+    if(req.query.fn != null) {
+	const fno = { out: decodeURI(req.query.fn.toString()) }
+	Object.assign(msg, fno);
+    }
+   
+    const guid = aria2.call("addUri",[uri], msg);
+    res.send(guid);
   });
 
   app.use('/static', express.static(path.join(__dirname, '/client/static')));

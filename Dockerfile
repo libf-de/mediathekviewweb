@@ -6,6 +6,7 @@ RUN npm ci
 
 WORKDIR /server
 COPY server/package.json server/package-lock.json ./
+RUN npm install aria2
 RUN npm ci
 
 WORKDIR /client

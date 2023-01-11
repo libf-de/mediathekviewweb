@@ -3,7 +3,8 @@ version: "3.7"
 services:
   application:
     container_name: mediathekviewweb
-    image: mediathekview/mediathekviewweb:latest
+    #image: mediathekview/mediathekviewweb:latest
+    build: .
     restart: always
     depends_on:
       - elasticsearch
@@ -33,8 +34,10 @@ services:
     volumes:
       - "mediathekviewweb:/data"
     ports:
-      - "8000:8000"
+      - "9313:8000"
     networks:
+      - aria2_arianet
+      - swag_swag
       - elasticsearch
       - redis
 
@@ -66,3 +69,7 @@ volumes:
 networks:
   elasticsearch:
   redis:
+  aria2_arianet:
+     external: true
+  swag_swag:
+     external: true

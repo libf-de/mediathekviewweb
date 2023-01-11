@@ -15,7 +15,7 @@ const allowCookiesKey = 'allowCookies';
 const lastAllowCookiesAskedKey = 'allowCookiesAsked';
 
 const debugResponse = false;
-const socket = io();
+const socket = io(window.location.protocol + "//" + window.location.host, {path: window.location.pathname + "socket.io"});
 const pv_id = randomString(6);
 const itemsPerPage = 15;
 let currentPage = 0;
@@ -128,6 +128,17 @@ function randomString(len) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
 
   return text;
+}
+
+function httpGetAsync(theUrl, callback)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+    }
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+    xmlHttp.send(null);
 }
 
 function formatDate(epochSeconds: number) {
@@ -606,7 +617,8 @@ function createVideoRow(text, url, videoTitle, filename, filesize?) {
 
   const downloadIcon = $('<i>').addClass('material-icons floatRight').text('save');
 
-  downloadButton.click(() => { downloadIcon.addClass('pulse'); setTimeout(() => downloadIcon.removeClass('pulse'), 500); track('download-video'); });
+  const saneFname = filename.replace(/[^0-9a-zA-ZäöüÄÖÜß_\-.: ]/gi, '').replaceAll(" ", "_");
+  downloadButton.click(() => { downloadIcon.addClass('pulse'); track('download-video'); httpGetAsync('download?url=' + encodeURI(url) + "&fn=" + encodeURI(saneFname), (msg) => {downloadIcon.removeClass('pulse'); console.log(msg);  }); return false; });
   downloadButton.append(downloadIcon);
 
   const clipboardButton = $('<a>', {
@@ -624,7 +636,10 @@ function createVideoRow(text, url, videoTitle, filename, filesize?) {
 
   tableRow.append($('<td>').text(text));
   tableRow.append(filesizeCell);
-  tableRow.append($('<td>').append($('<div>').append(watchButton).append(clipboardButton).append(downloadButton).addClass('watchDownloadField')));
+  tableRow.append($('<td>').append($('<div>')
+	.append(watchButton)
+	.append(downloadButton)
+	.addClass('watchDownloadField'))); //.append(clipboardButton)
 
   return tableRow;
 }
