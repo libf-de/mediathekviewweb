@@ -996,7 +996,7 @@ function initDownloadList() {
       data: null,
       render: returnEmptyString,
       createdCell: (td, cellData, rowData, row, col) => {
-        $(td).append("<div class=\"wrapper\"><div class=\"progress-bar\"><span class=\"progress-bar-fill\" style=\"width: " + rowData.progress + ";\">" + rowData.completedLength + "/" + rowData.totalLength + "(" + rowData.progress + ")</span></div></div>");
+        $(td).append("<div class=\"wrapper\"><div class=\"progress-bar\"><span class=\"progress-bar-fill\" style=\"width: " + rowData.progress + ";\">" + rowData.progress + " (" + rowData.completedLength + "/" + rowData.totalLength + ")</span></div></div>");
       }
     }, { /*Speed*/
       width: '7%',
