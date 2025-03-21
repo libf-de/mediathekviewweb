@@ -585,23 +585,11 @@ function createSubtitleRow(text, url, filename, filesize?) {
 function createVideoRow(text, url, videoTitle, description, filename, filesize?) {
   const tableRow = $('<tr>');
 
-  const watchButton = $('<a>', {
-    target: '_blank',
-    href: url,
-    click: () => {
-      playVideo(videoTitle, description, url);
-      return false;
-    }
-  });
-
-  const watchIcon = $('<i>').addClass('material-icons floatLeft').text('ondemand_video');
-  watchButton.click(() => { watchIcon.addClass('pulse'); setTimeout(() => watchIcon.removeClass('pulse'), 500); });
-  watchButton.append(watchIcon);
+  console.log({ text, url, videoTitle, description, filename, filesize });
 
   const downloadButton = $('<a>', {
     target: '_blank',
-    href: url,
-    download: filename
+    click: () => serverDownload(url, filename),
   });
 
   const downloadIcon = $('<i>').addClass('material-icons floatRight').text('save');
@@ -609,22 +597,11 @@ function createVideoRow(text, url, videoTitle, description, filename, filesize?)
   downloadButton.click(() => { downloadIcon.addClass('pulse'); setTimeout(() => downloadIcon.removeClass('pulse'), 500); track('download-video'); });
   downloadButton.append(downloadIcon);
 
-  const clipboardButton = $('<a>', {
-    target: '_blank',
-    href: url,
-    download: filename
-  });
-
-  const clipboardIcon = $('<i>').addClass('material-icons floatRight').text('assignment');
-
-  clipboardButton.click(() => { copyToClipboard(url); clipboardIcon.addClass('pulse'); setTimeout(() => clipboardIcon.removeClass('pulse'), 500); return false; });
-  clipboardButton.append(clipboardIcon);
-
   const filesizeCell = $('<td>').text((isNaN(filesize) || !filesize) ? '?' : formatBytes(filesize, 2)).addClass('filesizeCell');
 
   tableRow.append($('<td>').text(text));
   tableRow.append(filesizeCell);
-  tableRow.append($('<td>').append($('<div>').append(watchButton).append(clipboardButton).append(downloadButton).addClass('watchDownloadField')));
+  tableRow.append($('<td>').append($('<div>').append(downloadButton).addClass('watchDownloadField')));
 
   return tableRow;
 }
@@ -706,6 +683,28 @@ function resetVideoActionButton(button) {
   button.removeClass('text-warning');
   button.children().first().removeClass('icon-big');
   button.clicked = false;
+}
+
+function serverDownload(url, filename) {
+  const postData = new URLSearchParams();
+  postData.append('name', `"${encodeURIComponent(filename)}"`);
+  postData.append('links', `["${encodeURIComponent(url)}"]`);
+  postData.append('u', 'pyload');
+  postData.append('p', 'pyload');
+
+  const host = window.location.hostname || "localhost";
+
+  fetch(`http://${host}:8000/api/addPackage`, {
+    method: 'POST',
+    body: postData.toString()
+  })
+    .then(response => {
+      if(response.status !== 200) alert(`Failed to request download :( Status: ${response.status}`);
+      else window.open(`http://${host}:8000/`, '_blank').focus();
+    })
+    .catch((error) => {
+      alert(`Failed to request download :( Cause: ${error}`);
+    });
 }
 
 function createVideoActionButton(entry) {
