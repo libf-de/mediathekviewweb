@@ -696,6 +696,10 @@ function serverDownload(url, filename) {
 
   fetch(`http://${host}:8000/api/addPackage`, {
     method: 'POST',
+    headers: {
+      //'Authorization': 'Basic ' + btoa("pyload:pyload"),
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
     body: postData.toString()
   })
     .then(response => {
