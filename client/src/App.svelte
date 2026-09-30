@@ -15,7 +15,6 @@
   import { appState } from '$lib/store.svelte';
   import { initializeAnalytics, trackEvent } from '$lib/utils';
   import { onMount } from 'svelte';
-  import { MediaQuery } from 'svelte/reactivity';
 
   let cookieDialog: CookieDialog;
   let contactDialog: ContactDialog;
@@ -28,28 +27,25 @@
 
   let pageToView = $state<'datenschutz' | 'impressum' | null>(null);
 
-  const prefersDark = new MediaQuery('(prefers-color-scheme: dark)');
-
-  $effect(() => {
-    document.documentElement.classList.toggle('dark', prefersDark.current);
-  });
-
   $effect(() => {
     const mainClassList = document.querySelector('main')?.classList;
     const navContainerClassList = document.querySelector('#nav-container')?.classList;
     if (mainClassList && navContainerClassList) {
       const isList = appState.viewMode === 'list';
-      mainClassList.toggle('max-w-screen-2xl', isList);
-      mainClassList.toggle('max-w-7xl', !isList);
-      navContainerClassList.toggle('max-w-screen-2xl', isList);
-      navContainerClassList.toggle('max-w-7xl', !isList);
+      // Avoid classList.toggle(token, force) — its second argument is unreliable on
+      // older Safari; add/remove is universally supported.
+      for (const list of [mainClassList, navContainerClassList]) {
+        list.add(isList ? 'max-w-screen-2xl' : 'max-w-7xl');
+        list.remove(isList ? 'max-w-7xl' : 'max-w-screen-2xl');
+      }
     }
   });
 
   $effect(() => {
-    // Scroll to top when changing the pagination page.
+    // Scroll to top when changing the pagination page. No-arg scrollIntoView (instant)
+    // for iOS 12 — the ScrollIntoViewOptions object form isn't supported there.
     appState.currentPage;
-    mainElement?.scrollIntoView({ behavior: 'instant' });
+    mainElement?.scrollIntoView();
   });
 
   $effect(() => {
