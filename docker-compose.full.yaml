@@ -1,0 +1,83 @@
+# Full stack: builds the app image from the Containerfile and runs it together
+# with its OpenSearch and Valkey dependencies.
+#
+#   docker compose -f docker-compose.full.yaml up --build
+#
+# The app is then available at http://localhost:8000. OpenSearch and Valkey are
+# kept on the internal network only (not published) so this file can run
+# alongside the dependency-only docker-compose.yaml without port clashes.
+name: mediathekviewweb
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Containerfile
+    environment:
+      OPENSEARCH_HOST: opensearch
+      OPENSEARCH_PORT: "9200"
+      VALKEY_HOST: valkey
+      VALKEY_PORT: "6379"
+      VALKEY_DB: "2"
+      WEBSERVER_PORT: "8000"
+      DATA_DIRECTORY: data/
+      INDEX: "true"
+    volumes:
+      - "app-data:/mediathekviewweb/data"
+    ports:
+      - "8000:8000"
+    depends_on:
+      opensearch:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:8000/stats').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  opensearch:
+    image: opensearchproject/opensearch:3
+    environment:
+      discovery.type: single-node
+      bootstrap.memory_lock: "true"
+      OPENSEARCH_JAVA_OPTS: -Xms512m -Xmx512m
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      DISABLE_SECURITY_PLUGIN: "true"
+      OPENSEARCH_INITIAL_ADMIN_PASSWORD: MediathekViewWeb01!
+    # Required by bootstrap.memory_lock. The host may also need
+    # vm.max_map_count >= 262144 (sysctl -w vm.max_map_count=262144).
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - "opensearch:/usr/share/opensearch/data"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:9200/_cluster/health | grep -qE '\"status\":\"(green|yellow)\"'"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+    restart: unless-stopped
+
+  valkey:
+    image: valkey/valkey:9-alpine
+    command: ["--save 60 1"]
+    volumes:
+      - "valkey:/data"
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+
+volumes:
+  app-data:
+  valkey:
+  opensearch:
