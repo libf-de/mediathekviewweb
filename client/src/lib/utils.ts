@@ -3,6 +3,24 @@ declare const umami: {
   identify: (unique_id: string) => void;
 };
 
+// crypto.randomUUID is only available in secure contexts (HTTPS/localhost) and
+// not at all on older browsers (e.g. Safari/iOS 12). Fall back to a manual v4
+// UUID so plain-HTTP LAN access and legacy clients don't throw at startup.
+function generateUUID(): string {
+  if (typeof crypto != 'undefined' && typeof crypto.randomUUID == 'function') {
+    return crypto.randomUUID();
+  }
+
+  const getRandomByte = (typeof crypto != 'undefined' && typeof crypto.getRandomValues == 'function')
+    ? () => crypto.getRandomValues(new Uint8Array(1))[0]
+    : () => Math.floor(Math.random() * 256);
+
+  return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (c) => {
+    const n = Number(c);
+    return (n ^ (getRandomByte() & (15 >> (n / 4)))).toString(16);
+  });
+}
+
 export function initializeAnalytics(): void {
   if (typeof umami == 'undefined' || typeof umami.identify != 'function') {
     return;
@@ -11,7 +29,7 @@ export function initializeAnalytics(): void {
     const umamiIdKey = 'mvw_uuid';
     let uniqueId = localStorage.getItem(umamiIdKey);
     if (!uniqueId) {
-      uniqueId = crypto.randomUUID();
+      uniqueId = generateUUID();
       localStorage.setItem(umamiIdKey, uniqueId);
     }
     umami.identify(uniqueId);
