@@ -26,8 +26,8 @@
   ];
 </script>
 
-<div class="flex items-center gap-4 flex-wrap">
-  <nav aria-label="Seitennavigation" class="flex items-stretch gap-x-1">
+<div class="flex items-center flex-wrap -m-2 [&>*]:m-2">
+  <nav aria-label="Seitennavigation" class="flex items-stretch space-x-1">
     <button type="button" aria-label="Vorherige Seite" class="pagination-link pagination-link-arrow" disabled={appState.currentPage <= 0} onclick={() => appState.setCurrentPage(appState.currentPage - 1)}>
       <Icon icon="chevron-left" />
     </button>
@@ -43,7 +43,7 @@
     </button>
   </nav>
 
-  <div class="flex items-center gap-2">
+  <div class="flex items-center space-x-2">
     <label for="itemsPerPage" class="text-sm text-gray-600 dark:text-gray-400">Pro Seite:</label>
     <Dropdown id="itemsPerPage" class="w-20" label="Einträge pro Seite" options={itemsPerPageOptions} bind:value={appState.itemsPerPage} />
   </div>

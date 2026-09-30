@@ -158,7 +158,7 @@
 <style>
 
   .sort-btn {
-    @apply flex items-center gap-1;
+    @apply flex items-center space-x-1;
   }
 
   .sort-icon {

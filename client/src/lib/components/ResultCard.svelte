@@ -24,13 +24,13 @@
 
 <div class="result-card" onclick={handleClick}>
   <div class="p-3">
-    <div class="flex justify-between items-start gap-2">
+    <div class="flex justify-between items-start space-x-2">
       <div class="text-sm font-semibold text-gray-900/75 dark:text-gray-300 truncate" title={topic}>{topic}</div>
       <ChannelTag href={url_website} target="_blank" rel="noopener noreferrer" {channel} class="-mt-0.5 -mr-0.5" />
     </div>
 
     <h3 class="mt-1 font-semibold text-gray-900 dark:text-white" {title}>{title}</h3>
-    <div class="mt-1 flex items-center justify-between gap-2 text-sm text-gray-500 dark:text-gray-300/85">
+    <div class="mt-1 flex items-center justify-between space-x-2 text-sm text-gray-500 dark:text-gray-300/85">
       <span>{formatDate(timestamp)} · {formatTime(timestamp)} Uhr · {formatDuration(duration)}</span>
       <button
         type="button"
@@ -48,7 +48,7 @@
   <Drawer isOpen={isDetailsOpen}>
     {#snippet children()}
       <div class="p-3 rounded-md not-dark:shadow-md cursor-default" onclick={(e) => e.stopPropagation()}>
-        <div class="flex flex-col sm:flex-row items-start gap-4">
+        <div class="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
           <p class="flex-1 text-sm text-gray-900/80 dark:text-gray-300">{entry.description}</p>
           <div class="shrink-0 w-full sm:w-auto border-t sm:border-t-0 sm:border-l border-gray-500/30 pt-4 sm:pt-0 sm:pl-4">
             <VideoActions {entry} {onPlayVideo} view="drawer" {isDetailsOpen} />

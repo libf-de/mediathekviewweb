@@ -25,7 +25,7 @@
 
 <Dialog bind:this={dialog} title="Google Cast" icon="cast" onclose={() => resolver && choose('cancel')}>
   <p class="mb-6 text-gray-600 dark:text-gray-300">Für die Nutzung von <i>Google Cast (Chromecast)</i> muss ein externer Inhalt von Google eingebunden werden.</p>
-  <div class="flex flex-wrap justify-end gap-3">
+  <div class="flex flex-wrap justify-end -m-1.5 [&>*]:m-1.5">
     <Button variant="secondary" onclick={() => choose('cancel')}>Abbrechen</Button>
     <Button variant="secondary" onclick={() => choose('once')}>Fortfahren</Button>
     <Button variant="success" onclick={() => choose('always')}>Fortfahren und nicht mehr fragen</Button>

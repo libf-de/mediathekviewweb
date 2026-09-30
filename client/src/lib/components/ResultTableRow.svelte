@@ -21,7 +21,7 @@
 </script>
 
 <tr class="result-row" onclick={toggleDetails}>
-  <td class="p-2 text-nowrap"><ChannelTag href={entry.url_website} target="_blank" rel="noopener noreferrer" channel={entry.channel} /></td>
+  <td class="p-2 whitespace-nowrap"><ChannelTag href={entry.url_website} target="_blank" rel="noopener noreferrer" channel={entry.channel} /></td>
   <td class="p-2 truncate" title={entry.topic}>{entry.topic}</td>
   <td class="p-2 truncate" title={entry.title}>{entry.title}</td>
   <td class="p-2 text-center">
@@ -31,7 +31,7 @@
   </td>
   <td class="p-2">{formatDate(entry.timestamp)}</td>
   <td class="p-2">{formatTime(entry.timestamp)}</td>
-  <td class="p-2 text-nowrap text-right">{formatDuration(entry.duration)}</td>
+  <td class="p-2 whitespace-nowrap text-right">{formatDuration(entry.duration)}</td>
   <td class="p-2">
     <div class="grid grid-cols-[repeat(4,1fr)] gap-x-2">
       <VideoActions {entry} {onPlayVideo} view="table-inline" />
@@ -44,7 +44,7 @@
       {#snippet children()}
         <div class="p-4">
           <div class="cursor-default p-4 bg-gray-500/5 dark:bg-gray-500/15 rounded-md not-dark:shadow-md">
-            <div class="flex flex-col sm:flex-row items-start gap-4">
+            <div class="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
               <div class="flex-1 min-w-0">
                 <div class="text-neutral-900/80 dark:text-neutral-50/90">{entry.topic}</div>
                 <div class="mb-2 text-lg font-bold">{entry.title}</div>

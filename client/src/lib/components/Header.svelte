@@ -85,12 +85,12 @@
 
       <!-- Desktop Menu -->
       <div class="hidden md:flex md:items-center">
-        <ul class="flex flex-row items-center gap-2">
+        <ul class="flex flex-row items-center space-x-2">
           {#each navItems as item}
             <li>{@render navItem(item, false)}</li>
           {/each}
           <li class="relative" use:clickOutside={() => (aboutMenuOpen = false)}>
-            <button class="nav-link flex gap-2 items-center" type="button" onclick={() => (aboutMenuOpen = !aboutMenuOpen)}>
+            <button class="nav-link flex space-x-2 items-center" type="button" onclick={() => (aboutMenuOpen = !aboutMenuOpen)}>
               Über <Icon icon="chevron-down" />
             </button>
             {#if aboutMenuOpen}

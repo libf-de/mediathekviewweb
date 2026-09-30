@@ -60,7 +60,7 @@
 
     <div>
       <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Feed-URL:</p>
-      <div class="flex gap-2">
+      <div class="flex space-x-2">
         <input type="text" readonly value={feedUrl} class="url-input" onclick={(e) => (e.target as HTMLInputElement)?.select()} />
         <button type="button" class="copy-btn" onclick={copyUrl} aria-label="URL kopieren">
           {#if copied}
@@ -104,6 +104,6 @@
   }
 
   .open-btn {
-    @apply w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 px-4 rounded-lg transition-colors cursor-pointer;
+    @apply w-full flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 px-4 rounded-lg transition-colors cursor-pointer;
   }
 </style>

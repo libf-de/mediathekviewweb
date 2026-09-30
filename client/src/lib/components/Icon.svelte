@@ -49,7 +49,7 @@
     font-size of the parent <span>.
     `fill="currentColor"` makes the icon's color match the text color.
   -->
-  <svg fill="currentColor" style="width: 1em; aspect-ratio: 1;">
+  <svg fill="currentColor" style="width: 1em; height: 1em;">
     <use href={url} />
   </svg>
 </span>

@@ -31,7 +31,7 @@
 </script>
 
 <div class="panel mb-6">
-  <div class="flex flex-wrap items-center gap-4">
+  <div class="flex flex-wrap items-center -m-2 [&>*]:m-2">
     <div class="search-input-wrapper flex-grow min-w-[15rem]">
       <div class="search-input-icon">
         <Icon icon="search" class="text-gray-600 dark:text-gray-300" />
@@ -48,11 +48,11 @@
         </button>
       {/if}
     </div>
-    <div class="flex items-center gap-4">
+    <div class="flex items-center space-x-4">
       <Toggle label="Überall" bind:checked={appState.everywhere} />
       <Toggle label="Zukünftige" bind:checked={appState.future} />
     </div>
-    <div class="flex items-stretch gap-2 min-h-10">
+    <div class="flex items-stretch space-x-2 min-h-10">
       {#if appState.viewMode === 'grid'}
         <Dropdown label="Sortierung" options={sortOptions} value={sortValue} onchange={handleSortChange} />
       {/if}
@@ -82,7 +82,7 @@
   }
 
   .search-input-icon {
-    @apply absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none;
+    @apply absolute top-0 bottom-0 left-0 flex items-center pl-3 pointer-events-none;
   }
 
   .search-input {
@@ -94,6 +94,6 @@
   }
 
   .search-input-right {
-    @apply absolute right-0 inset-y-0 flex items-center px-4 leading-none text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white cursor-pointer transition-opacity;
+    @apply absolute right-0 top-0 bottom-0 flex items-center px-4 leading-none text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white cursor-pointer transition-opacity;
   }
 </style>

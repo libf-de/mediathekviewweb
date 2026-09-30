@@ -292,6 +292,6 @@
   }
 
   .legend span {
-    @apply inline-flex items-center gap-1;
+    @apply inline-flex items-center space-x-1;
   }
 </style>

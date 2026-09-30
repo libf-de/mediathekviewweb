@@ -40,7 +40,7 @@
   }}>
   {#if title}
     <div class="flex items-center justify-between p-6 md:p-8">
-      <div class="flex items-center gap-4">
+      <div class="flex items-center space-x-4">
         {#if icon}
           <Icon {icon} class="text-2xl " />
         {/if}

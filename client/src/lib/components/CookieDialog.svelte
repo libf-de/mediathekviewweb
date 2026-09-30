@@ -34,7 +34,7 @@
       <a class="text-green-600 dark:text-green-400 hover:text-green-500 dark:hover:text-green-300 underline font-medium" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BDVH46DLCM7E8&source=url" target="_blank" onclick={() => trackEvent('Click PayPal Link (Cookie-Dialog)')}>Spende</a>
       nachzudenken, um den Weiterbetrieb der Website zu ermöglichen.
     </div>
-    <div class="flex justify-end gap-4">
+    <div class="flex justify-end space-x-4">
       <Button variant="secondary" onclick={() => onConsent(false)}>Ablehnen</Button>
       <Button variant="success" onclick={() => onConsent(true)}>Akzeptieren</Button>
     </div>
