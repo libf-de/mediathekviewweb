@@ -1,14 +1,13 @@
 <script lang="ts">
-  import type { ResultEntry, VideoPayload } from '$lib/types';
+  import type { ResultEntry } from '$lib/types';
   import { formatDate, formatDuration, formatTime, isToggleClick } from '$lib/utils';
   import ChannelTag from './ChannelTag.svelte';
   import Drawer from './Drawer.svelte';
   import Icon from './Icon.svelte';
   import VideoActions from './VideoActions.svelte';
 
-  let { entry, onPlayVideo, isDetailsOpen, onToggleDetails } = $props<{
+  let { entry, isDetailsOpen, onToggleDetails } = $props<{
     entry: ResultEntry;
-    onPlayVideo: (payload: VideoPayload) => void;
     isDetailsOpen: boolean;
     onToggleDetails: (id: string) => void;
   }>();
@@ -51,7 +50,7 @@
         <div class="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
           <p class="flex-1 text-sm text-gray-900/80 dark:text-gray-300">{entry.description}</p>
           <div class="shrink-0 w-full sm:w-auto border-t sm:border-t-0 sm:border-l border-gray-500/30 pt-4 sm:pt-0 sm:pl-4">
-            <VideoActions {entry} {onPlayVideo} view="drawer" {isDetailsOpen} />
+            <VideoActions {entry} view="drawer" {isDetailsOpen} />
           </div>
         </div>
       </div>

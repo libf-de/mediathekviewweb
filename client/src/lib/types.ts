@@ -47,12 +47,3 @@ export type QueryResult = {
     totalEntries?: number,
   },
 };
-
-export type VideoPayload = {
-  channel: string;
-  topic: string;
-  title: string;
-  url: string;
-  quality: VideoQuality;
-  url_subtitle?: string;
-};

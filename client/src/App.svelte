@@ -12,9 +12,7 @@
   import ResultsContainer from '$lib/components/ResultsContainer.svelte';
   import RssFeedDialog from '$lib/components/RssFeedDialog.svelte';
   import SearchBar from '$lib/components/SearchBar.svelte';
-  import VideoPlayer from '$lib/components/VideoPlayer.svelte';
   import { appState } from '$lib/store.svelte';
-  import type { VideoPayload } from '$lib/types';
   import { initializeAnalytics, trackEvent } from '$lib/utils';
   import { onMount } from 'svelte';
   import { MediaQuery } from 'svelte/reactivity';
@@ -28,7 +26,6 @@
   let mainElement: HTMLElement;
   let legalDialog = $state<Dialog>();
 
-  let videoToPlay = $state<VideoPayload | null>(null);
   let pageToView = $state<'datenschutz' | 'impressum' | null>(null);
 
   const prefersDark = new MediaQuery('(prefers-color-scheme: dark)');
@@ -138,21 +135,20 @@
 </script>
 
 <svelte:head>
-  <title>{videoToPlay ? `${videoToPlay.title} – MediathekViewWeb` : appState.query ? `${appState.query} – MediathekViewWeb` : 'MediathekViewWeb'}</title>
+  <title>{appState.query ? `${appState.query} – MediathekViewWeb` : 'MediathekViewWeb'}</title>
 </svelte:head>
 
-<div class:blur={!!videoToPlay}>
+<div>
   <Header showContact={() => contactDialog.show()} showDonate={() => donateDialog.show()} showHelp={() => helpDialog.show()} {showImpressum} {showDatenschutz} />
 
   <main bind:this={mainElement} class="mx-auto py-6 px-4 sm:px-6 lg:px-8">
     <div>
       <SearchBar showHelp={() => helpDialog.show()} showRssFeed={() => rssFeedDialog.show()} />
-      <ResultsContainer onPlayVideo={(payload) => (videoToPlay = payload)} />
+      <ResultsContainer />
     </div>
   </main>
 </div>
 
-<VideoPlayer videoPayload={videoToPlay} onClose={() => (videoToPlay = null)} />
 <CookieDialog bind:this={cookieDialog} onConsent={handleCookieConsent} {showImpressum} {showDatenschutz} />
 <HelpDialog bind:this={helpDialog} />
 <RssFeedDialog bind:this={rssFeedDialog} />
@@ -172,10 +168,3 @@
   </Dialog>
 {/if}
 
-<style>
-
-  .blur {
-    filter: blur(3px) !important;
-    transition: all 0.4s ease-in-out;
-  }
-</style>

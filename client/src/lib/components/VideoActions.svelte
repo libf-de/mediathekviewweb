@@ -1,18 +1,16 @@
 <script lang="ts">
   import { castVideo, isChromeBasedBrowser } from '$lib/cast';
-  import type { ResultEntry, VideoPayload, VideoQuality } from '$lib/types';
-  import { formatBytes, playVideoInNewWindow, trackEvent } from '$lib/utils';
+  import type { ResultEntry, VideoQuality } from '$lib/types';
+  import { formatBytes, trackEvent } from '$lib/utils';
   import Icon from './Icon.svelte';
 
   let {
     entry,
     view,
-    onPlayVideo,
     isDetailsOpen = false,
   } = $props<{
     entry: ResultEntry;
     view: 'table-inline' | 'drawer';
-    onPlayVideo: (payload: VideoPayload) => void;
     isDetailsOpen?: boolean;
   }>();
 
@@ -62,32 +60,12 @@
     }
   });
 
-  async function play(event: MouseEvent, quality: VideoQuality, url: string) {
-    event.stopPropagation();
-
-    if (isLongPress()) {
-      return;
-    }
-
+  function trackPlay(quality: VideoQuality) {
     trackEvent('Play Video', {
       channel: entry.channel,
       topic: entry.topic,
       title: entry.title,
       quality,
-    });
-
-    if (url.startsWith('http://')) {
-      await playVideoInNewWindow(url);
-      return;
-    }
-
-    onPlayVideo({
-      channel: entry.channel,
-      topic: entry.topic,
-      title: entry.title,
-      quality,
-      url,
-      url_subtitle: entry.url_subtitle,
     });
   }
 
@@ -142,13 +120,11 @@
     {#if url}
       <a
         href={url}
+        target="_blank"
+        rel="noopener noreferrer"
         class="video-action-link -my-1.5"
-        title={`${q.name} abspielen`}
-        onpointerdown={recordPointerDown}
-        onclick={(e) => {
-          e.preventDefault();
-          play(e, q.name, url);
-        }}>{q.name}</a>
+        title={`${q.name} in neuem Tab abspielen`}
+        onclick={() => trackPlay(q.name)}>{q.name}</a>
     {:else}
       <span></span>
     {/if}
@@ -170,13 +146,11 @@
             <td>
               <a
                 href={url}
+                target="_blank"
+                rel="noopener noreferrer"
                 class="action-btn"
-                title={`${q.name} abspielen`}
-                onpointerdown={recordPointerDown}
-                onclick={(e) => {
-                  e.preventDefault();
-                  play(e, q.name, url);
-                }}>
+                title={`${q.name} in neuem Tab abspielen`}
+                onclick={() => trackPlay(q.name)}>
                 <Icon icon="play-fill" />
               </a>
             </td>

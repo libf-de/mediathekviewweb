@@ -44,21 +44,6 @@ export function trackEvent(eventName: string, data?: Record<string, any>): void 
   }
 }
 
-export async function playVideoInNewWindow(url: string): Promise<void> {
-  const playerWindow: Window | null = window.open(url, '_blank');
-  const start = Date.now();
-
-  while (playerWindow?.closed === false) {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-  }
-
-  const playDuration = Date.now() - start;
-
-  if (playDuration >= 1000 * 30) {
-    location.reload();
-  }
-}
-
 export function debounce<F extends (...args: any[]) => void>(func: F, waitFor: number): (...args: Parameters<F>) => void {
   let timeout: number | null = null;
   return (...args: Parameters<F>): void => {
