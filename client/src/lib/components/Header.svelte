@@ -76,7 +76,7 @@
   {/if}
 {/snippet}
 
-<nav class="bg-white dark:bg-gray-800 not-dark:shadow-sm" aria-label="Hauptnavigation">
+<nav class="bg-white dark:bg-gray-800 not-dark:shadow" aria-label="Hauptnavigation">
   <div id="nav-container" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between py-4">
       <h1 class="text-xl font-bold text-gray-900 dark:text-white m-0">
@@ -129,7 +129,6 @@
 </nav>
 
 <style>
-  @reference "../../app.css";
 
   .nav-link {
     @apply cursor-pointer rounded-md px-3 py-2 text-lg md:text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white;

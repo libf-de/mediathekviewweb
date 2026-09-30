@@ -58,5 +58,4 @@
 </dialog>
 
 <style>
-  @reference "../../app.css";
 </style>

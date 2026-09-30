@@ -156,7 +156,6 @@
 </div>
 
 <style>
-  @reference "../../app.css";
 
   .sort-btn {
     @apply flex items-center gap-1;

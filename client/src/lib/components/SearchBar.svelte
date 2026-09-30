@@ -67,10 +67,9 @@
 </div>
 
 <style>
-  @reference "../../app.css";
 
   .panel {
-    @apply bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm dark:shadow-none;
+    @apply bg-white dark:bg-gray-800 rounded-lg p-4 shadow dark:shadow-none;
   }
 
   .icon-btn {

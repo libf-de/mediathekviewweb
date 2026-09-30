@@ -182,7 +182,7 @@
   {#if videoPayload}
     <div class="max-w-[calc(3/5*100%+6rem)] h-full m-auto py-12 space-y-8">
       <div>
-        <ChannelTag href={videoPayload.url_website} target="_blank" rel="noopener noreferrer" channel={videoPayload.channel} class="text-base!" />
+        <ChannelTag href={videoPayload.url_website} target="_blank" rel="noopener noreferrer" channel={videoPayload.channel} class="!text-base" />
         <div class="mt-4 text-gray-50/80">{videoPayload.topic}</div>
         <div class="text-lg font-semibold">{videoPayload.title}</div>
       </div>

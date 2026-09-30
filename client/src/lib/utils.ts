@@ -6,7 +6,7 @@ declare const umami: {
 // crypto.randomUUID is only available in secure contexts (HTTPS/localhost) and
 // not at all on older browsers (e.g. Safari/iOS 12). Fall back to a manual v4
 // UUID so plain-HTTP LAN access and legacy clients don't throw at startup.
-function generateUUID(): string {
+export function generateUUID(): string {
   if (typeof crypto != 'undefined' && typeof crypto.randomUUID == 'function') {
     return crypto.randomUUID();
   }

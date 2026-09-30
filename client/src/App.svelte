@@ -173,7 +173,6 @@
 {/if}
 
 <style>
-  @reference "./app.css";
 
   .blur {
     filter: blur(3px) !important;

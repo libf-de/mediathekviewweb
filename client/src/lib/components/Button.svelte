@@ -22,7 +22,6 @@
 </button>
 
 <style>
-  @reference "../../app.css";
 
   .btn {
     @apply inline-flex items-center justify-center px-4 py-2 rounded-md font-medium cursor-pointer transition-colors duration-250 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800;

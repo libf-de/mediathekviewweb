@@ -12,7 +12,6 @@
 </div>
 
 <style>
-  @reference "../../app.css";
 
   .drawer {
     display: grid;

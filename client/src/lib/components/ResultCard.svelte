@@ -60,10 +60,9 @@
 </div>
 
 <style>
-  @reference "../../app.css";
 
   .result-card {
-    @apply bg-white dark:bg-gray-800 hover:bg-gray-200/70 hover:dark:bg-gray-700/60 rounded-lg shadow-sm dark:shadow-none cursor-pointer transition-colors duration-250;
+    @apply bg-white dark:bg-gray-800 hover:bg-gray-200/70 hover:dark:bg-gray-700/60 rounded-lg shadow dark:shadow-none cursor-pointer transition-colors duration-250;
   }
 
   .result-card-toggle {

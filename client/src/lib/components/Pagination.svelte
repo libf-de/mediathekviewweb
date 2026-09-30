@@ -50,7 +50,6 @@
 </div>
 
 <style>
-  @reference "../../app.css";
 
   .pagination-link {
     @apply flex items-center justify-center rounded-md px-4 py-2 leading-tight transition-colors duration-250;

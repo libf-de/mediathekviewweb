@@ -2,7 +2,6 @@ import path from 'node:path';
 
 import legacy from '@vitejs/plugin-legacy';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
-import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, loadEnv } from 'vite';
 
 // Oldest browser we intentionally support.
@@ -19,7 +18,6 @@ export default defineConfig(({ mode }) => {
       target: ['safari12'],
     },
     plugins: [
-      tailwindcss(),
       svelte(),
       // Emits a nomodule SystemJS fallback for browsers without ESM support and,
       // via modernPolyfills, injects the core-js polyfills Safari 12 needs into

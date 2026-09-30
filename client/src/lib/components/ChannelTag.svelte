@@ -55,7 +55,6 @@
 </a>
 
 <style>
-  @reference "../../app.css";
 
   .channel-tag {
     @apply inline-block rounded px-2.5 py-0.5 text-xs font-bold transition-colors duration-250 overflow-clip;
@@ -63,9 +62,15 @@
   }
 
   .channel-one {
-    @apply relative bg-clip-text text-transparent dark:text-shadow-none!;
+    @apply relative bg-clip-text text-transparent;
 
     background-image: linear-gradient(160deg, #f6c617 0%, #f6c617 23.49%, #f4bd20 28.31%, #eea639 36.26%, #e38062 46.38%, #d54b9b 58.25%, #c50ddd 70.54%, #c50ddd 100%);
     text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .channel-one {
+      text-shadow: none;
+    }
   }
 </style>

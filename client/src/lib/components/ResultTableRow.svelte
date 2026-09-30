@@ -62,7 +62,6 @@
 </tr>
 
 <style>
-  @reference "../../app.css";
 
   .result-row,
   .result-details-row {

@@ -80,7 +80,6 @@
 </Dialog>
 
 <style>
-  @reference "../../app.css";
 
   .quality-group {
     @apply flex rounded-md overflow-hidden border border-gray-300 dark:border-gray-600 divide-x divide-gray-300 dark:divide-gray-600;

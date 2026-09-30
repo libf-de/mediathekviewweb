@@ -257,7 +257,6 @@
 {/if}
 
 <style>
-  @reference "../../app.css";
 
   .video-action-link {
     @apply inline-flex items-center justify-center text-[0.85rem] font-bold rounded bg-gray-200 px-2 py-1 text-gray-700 hover:text-gray-900 dark:bg-gray-700 dark:text-gray-100 dark:hover:text-white cursor-pointer;
